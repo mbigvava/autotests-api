@@ -2,7 +2,7 @@ from typing import TypedDict
 
 from httpx import Client
 
-from clients.authentication.authentication_client import get_authentication_client, LoginRequestDict
+from clients.authentication_client import get_authentication_client, LoginRequestDict
 
 
 class AuthenticationUserDict(TypedDict):  # Структура данных пользователя для авторизации
@@ -20,15 +20,13 @@ def get_private_http_client(user: AuthenticationUserDict) -> Client:
     """
     # Инициализируем AuthenticationClient для аутентификации
     authentication_client = get_authentication_client()
-
     # Инициализируем запрос на аутентификацию
     login_request = LoginRequestDict(email=user['email'], password=user['password'])
     # Выполняем POST запрос и аутентифицируемся
-    login_response = authentication_client.login(login_request)
-
+    login_response = authentication_client.login_api(login_request)
     return Client(
         timeout=100,
         base_url="http://localhost:8000",
         # Добавляем заголовок авторизации
-        headers={"Authorization": f"Bearer {login_response['token']['accessToken']}"}
+        headers={"Authorization": f"Bearer {login_response.json()['token']['accessToken']}"}
     )

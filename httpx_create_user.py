@@ -9,9 +9,15 @@ payload = {
     "firstName": "Mariam",
     "middleName": "Testovich"
 }
-response = httpx.post("http://localhost:8000/api/v1/users", json=payload)
+create_user_response = public_users_client.create_user(create_user_request)
+print('Create user data:', create_user_response)
 
-print(response.status_code)
-print(response.json())
+authentication_user = AuthenticationUserDict(
+    email=create_user_request['email'],
+    password=create_user_request['password']
+)
+private_users_client = get_private_users_client(authentication_user)
 
-#запуск скрипта python -m httpx_create_user
+# Используем метод get_user
+get_user_response = private_users_client.get_user(create_user_response['user']['id'])
+print('Get user data:', get_user_response)

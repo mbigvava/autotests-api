@@ -51,7 +51,6 @@ class FilesClient(APIClient):
         """
         return self.delete(f"/api/v1/files/{file_id}")
 
-
 # Добавляем builder для FilesClient
 def get_files_client(user: AuthenticationUserDict) -> FilesClient:
     """

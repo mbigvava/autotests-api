@@ -3,6 +3,7 @@ from typing import TypedDict
 from httpx import Response
 
 from clients.api_client import APIClient
+from clients.private_http_builder import AuthenticationUserDict, get_private_http_client
 
 
 class GetCoursesQueryDict(TypedDict):
@@ -88,11 +89,12 @@ class CoursesClient(APIClient):
         """
         return self.delete(f"/api/v1/courses/{course_id}")
 
-    # Добавляем builder для CoursesClient
-    def get_courses_client(user: AuthenticationUserDict) -> CoursesClient:
-        """
-        Функция создаёт экземпляр CoursesClient с уже настроенным HTTP-клиентом.
 
-        :return: Готовый к использованию CoursesClient.
-        """
-        return CoursesClient(client=get_private_http_client(user))
+# Добавляем builder для CoursesClient
+def get_courses_client(user: AuthenticationUserDict) -> CoursesClient:
+    """
+    Функция создаёт экземпляр CoursesClient с уже настроенным HTTP-клиентом.
+
+    :return: Готовый к использованию CoursesClient.
+    """
+    return CoursesClient(client=get_private_http_client(user))

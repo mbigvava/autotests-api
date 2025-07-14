@@ -12,12 +12,9 @@ class UsersClient:
     def delete_user(self, user_id: str):
         return self.client.delete(f"/api/v1/users/{user_id}")
 
-"""Теперь клиентский код выглядит чисто и понятно:"""
-
-    client = UsersClient(base_url="https://example.com")
-
-    response = client.get_user(user_id)
-    response = client.update_user(user_id, {"email": "new@example.com"})
-    response = client.delete_user(user_id)
+client = UsersClient(base_url="https://example.com")
+response = client.get_user("user_id")
+response = client.update_user("user_id", {"email": "new@example.com"})
+response = client.delete_user("user_id")
 
 """"Паттерн Facade делает код структурированным, читабельным и удобным в использовании."""
