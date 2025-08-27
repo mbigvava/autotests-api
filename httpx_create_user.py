@@ -1,9 +1,11 @@
 #user creation
 import httpx
 #генерация случайно email
-#from tools.fakers import get_random_email и тогда в "email": get_random_email(),
+from tools.fakers import fake
 payload = {
-    "email": "user1@gmail.com",
+    "email": fake.email(),
+    "password": "<PASSWORD>",
+    "lastName": "Test1",
     "password": "Qwerty12345",
     "lastName": "Test",
     "firstName": "Mariam",

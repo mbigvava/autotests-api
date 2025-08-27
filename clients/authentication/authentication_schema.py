@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-
+from tools.fakers import fake
 
 # Добавили суффикс Schema вместо Dict
 class TokenSchema(BaseModel):  # Наследуем от BaseModel вместо TypedDict
@@ -16,8 +16,11 @@ class LoginRequestSchema(BaseModel):  # Наследуем от BaseModel вме
     """
     Описание структуры запроса на аутентификацию.
     """
-    email: str
-    password: str
+    email: str = Field(default_factory=fake.email)
+    password: str = Field(default_factory=fake.password)
+    # default_factory позволяет установить значение по умолчанию,
+    # вызывая функцию при каждом создании экземпляра модели.
+    # В данном случае email будет автоматически заполняться случайным значением.
 
 
 # Добавили суффикс Schema вместо Dict

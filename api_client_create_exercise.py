@@ -1,10 +1,8 @@
 from httpx import Response
 from clients.api_client import APIClient
-from clients.courses.courses_schema import CreateCourseResponseSchema
-from clients.exercises import exercises_client
 from clients.exercises.exercises_schema import GetExercisesQuerySchema, CreateExerciseRequestSchema, \
     UpdateExerciseRequestSchema, CreateExerciseResponseSchema, UpdateExerciseResponseSchema, \
-    GetExercisesResponseSchema, CreateCourseForExerciseResponse, GetExercisesResponseSchema
+     GetExercisesResponseSchema
 from clients.private_http_builder import get_private_http_client, AuthenticationUserSchema
 
 class ExercisesClient(APIClient):
@@ -85,21 +83,14 @@ def get_exercises_client(user: AuthenticationUserSchema) -> ExercisesClient:
 
 
 from clients.courses.courses_client import get_courses_client, CreateCourseRequestSchema
-from clients.exercises.exercises_client import get_exercise_client,CreateExerciseRequestSchema, ExercisesClient
+from clients.exercises.exercises_client import get_exercises_client,CreateExerciseRequestSchema, ExercisesClient
 from clients.files.files_client import get_files_client, CreateFileRequestSchema
 from clients.private_http_builder import AuthenticationUserSchema
 from clients.users.public_users_client import get_public_users_client, CreateUserRequestSchema
-from tools.fakers import get_random_email
 
 public_users_client = get_public_users_client()
 
-create_user_request = CreateUserRequestSchema(
-    email=get_random_email(),
-    password="string",
-    last_name="string",
-    first_name="string",
-    middle_name="string"
-)
+create_user_request = CreateUserRequestSchema()
 create_user_response = public_users_client.create_user(create_user_request)
 
 authentication_user = AuthenticationUserSchema(
@@ -109,37 +100,20 @@ authentication_user = AuthenticationUserSchema(
 
 files_client = get_files_client(authentication_user)
 courses_client = get_courses_client(authentication_user)
-exercise_client = get_exercise_client(authentication_user)
+exercise_client = get_exercises_client(authentication_user)
 
 # Вместо CreateFileRequestDict используем CreateFileRequestSchema
-create_file_request = CreateFileRequestSchema(
-    filename="image.png",
-    directory="courses",
-    upload_file="./testdata/files/image.png"
-)
+create_file_request = CreateFileRequestSchema(upload_file="./testdata/files/image.png")
 create_file_response = files_client.create_file(create_file_request)
 print('Create file data:', create_file_response)
 
 create_course_request = CreateCourseRequestSchema(
-    title="Python",
-    maxScore=100,
-    minScore=10,
-    description="Python API course",
-    estimatedTime="2 weeks",
     previewFileId=create_file_response.file.id,  # Используем атрибуты место ключей
     createdByUserId=create_user_response.user.id  # Используем атрибуты место ключей
 )
 create_course_response = courses_client.create_course(create_course_request)
 print('Create course data:', create_course_response)
 
-create_exercise_request = CreateExerciseRequestSchema(
-    title="Exercise 1",
-    courseId=create_course_response.course.id,  # Используем атрибуты место ключей
-    maxScore=5,
-    minScore=1,
-    orderIndex=0,
-    description="Exercise 1",
-    estimatedTime="5 minutes"
-)
+create_exercise_request = CreateExerciseRequestSchema()
 create_exercise_response = exercise_client.create_exercise_api(create_exercise_request)
 print('Create exercise data:', create_exercise_response)
